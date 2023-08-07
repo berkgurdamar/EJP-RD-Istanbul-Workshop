@@ -91,16 +91,16 @@ TMP_DIR=/home/tmp/guest VALIDATION_STRINGENCY=LENIENT
 
 ```
 picard MarkDuplicates I=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.bam \
-O=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.bam \
-M=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup_metrics.txt \
+O=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.bam \
+M=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup_metrics.txt \
 CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=/home/tmp/guest
 ```
 
 #### FixMateInformation
 
 ```
-picard FixMateInformation I=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.bam\
-O=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.matefixed.bam \
+picard FixMateInformation I=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.bam\
+O=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bam \
 SORT_ORDER=coordinate CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/home/tmp/guest
 ```
 
@@ -109,20 +109,20 @@ SORT_ORDER=coordinate CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/ho
 ```
 gatk BaseRecalibrator --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---input /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.matefixed.bam \
+--input /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bam \
 --known-sites /home/resources/sites/hg38/dbsnp_146.hg38.vcf.gz \
 --known-sites /home/resources/sites/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz \
 --known-sites /home/resources/sites/hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz \
---output /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.recal_data.table --tmp-dir /home/tmp/guest
+--output /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.recal_data.table --tmp-dir /home/tmp/guest
 ```
 
 #### ApplyBQSR
 
 ```
 gatk ApplyBQSR --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
---input /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.matefixed.bam \
---bqsr-recal-file /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.recal_data.table \
---output /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.matefixed.bqsr.bam --tmp-dir /home/tmp/guest
+--input /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bam \
+--bqsr-recal-file /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.recal_data.table \
+--output /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bqsr.bam --tmp-dir /home/tmp/guest
 ```
 
 #### HaplotypeCaller
@@ -130,8 +130,8 @@ gatk ApplyBQSR --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38
 ```
 gatk HaplotypeCaller --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---input /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.mdup.matefixed.bqsr.bam \
---output /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.g.vcf.gz \
+--input /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bqsr.bam \
+--output /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample.g.vcf.gz \
 --emit-ref-confidence GVCF --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest \
 --native-pair-hmm-threads 4
 ```
@@ -141,9 +141,9 @@ If multiple samples
 ```
 gatk CombineGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---variant /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample1.g.vcf.gz \
---variant /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample2.g.vcf.gz \
- -O /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/combined.g.vcf.gz \
+--variant /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample1.g.vcf.gz \
+--variant /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample2.g.vcf.gz \
+ -O /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/combined.g.vcf.gz \
 --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest
 ```
 
@@ -152,8 +152,8 @@ gatk CombineGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.h
 ```
 gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 --intervals /home/resources/kits/hg38/Twist_Comprehensive_Exome_Covered_Targets_hg38.bed --interval-padding 100 \
---variant /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.g.vcf.gz \
---output /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_genotype.vcf.gz \
+--variant /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample.g.vcf.gz \
+--output /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz \
 --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest
 ```
 
@@ -163,10 +163,27 @@ gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.
 #### vcfanno
 
 ```
-vt validate /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_genotype.vcf.gz \
+vt validate /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz \
 -r /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 
 vcfanno -p 4 -lua /home/projects/ejprd_istanbul_workshop/scripts/analysis_related/custom.lua \
 /home/projects/ejprd_istanbul_workshop/scripts/analysis_related/config.toml \
-/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_genotype.vcf.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_vcfanno.vcf
+/home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf
+```
+
+#### vep
+
+```
+/home/tools/vep/ensembl-vep-release-109/vep -i /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf \
+--offline --cache --dir /home/tools/vep/ --cache_version 109 \
+--assembly GRCh38 --hgvsg --everything --total_length --fork 4 \
+--force_overwrite -o /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
+--vcf --fasta /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
+```
+
+#### vcf2db
+
+```
+vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
+/home/projects/ejprd_istanbul_workshop/sample.ped /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.gemini.db
 ```
