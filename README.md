@@ -7,7 +7,7 @@ This repository contains all required informations for performing Whole Exome Se
 - Quality Control with [FastQC](https://github.com/s-andrews/FastQC)
 - Trimming with [Trim-Galore](https://github.com/FelixKrueger/TrimGalore)
 - Mapping with [BWA-MEM](https://github.com/lh3/bwa)
- - If necessary, merging BAMs
+  - If necessary, merge BAMs
 - Processing using [GATK](https://gatk.broadinstitute.org/hc/en-us) best practices
   - MarkDuplicates
   - FixMateInformation
