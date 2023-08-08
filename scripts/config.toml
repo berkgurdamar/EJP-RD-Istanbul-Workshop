@@ -1,0 +1,17 @@
+[[annotation]]
+file="/home/shared/resources/clinvar_20230702.vcf.gz"
+fields=["CLNSIG", "CLNDN", "GENEINFO"]
+names=["clinvar_sig", "clinvar_disease_name", "clinvar_geneinfo"]
+ops=["self", "self", "self"]
+
+[[postannotation]]
+fields=["clinvar_sig", "max_aaf_all"]
+op="lua:check_clinvar_aaf(clinvar_sig, max_aaf_all, 0.005)"
+name="common_pathogenic"
+type="Flag"
+
+[[postannotation]]
+name="ID"
+fields=["rs_id", "ID"]
+op="setid"
+type="String"
