@@ -80,8 +80,6 @@ sambamba sort --tmpdir /home/tmp/guest --nthreads=4 \
 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001_unsorted.bam
 
 rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001_unsorted.bam
-
-# picard BuildBamIndex INPUT=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.bam TMP_DIR=/home/tmp/guest VALIDATION_STRINGENCY=LENIENT
 ```
 
 Combine multiple lanes
@@ -219,7 +217,7 @@ vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep
               /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.family.query.txt
 ```
 
-#### intervar
+#### InterVar
 
 ```
 python /home/tools/InterVar/Intervar.py --buildver=hg38 \
