@@ -157,7 +157,7 @@ gatk CombineGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.h
 --annotation-group AS_StandardAnnotation --tmp-dir /home/tmp/guest
 ```
 
-#### HaplotypeCaller
+#### GenotypeGVCFs
 
 ```
 gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
