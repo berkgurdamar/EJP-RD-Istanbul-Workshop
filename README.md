@@ -33,6 +33,16 @@ Activate the conda environment
 conda activate EpiRARE_new
 ```
 
+Create necessary folders
+
+```
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/qc
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/trimming
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/mapping
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/processing
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/annotation
+```
+
 ### Quality Control
 
 ```
@@ -186,4 +196,49 @@ vcfanno -p 4 -lua /home/projects/ejprd_istanbul_workshop/scripts/analysis_relate
 ```
 vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
 /home/projects/ejprd_istanbul_workshop/sample.ped /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.gemini.db
+```
+
+#### gemini
+
+```
+/home/tools/anaconda3/envs/wgs_gemini/bin/gemini query -q \
+            	"select gene, chrom, start, end, ref, alt, type, \
+            	gt_quals, gt_depths, gt_alt_depths, gt_alt_freqs, \
+            	gt_types, \
+            	is_exonic, is_coding, is_lof, is_splicing, \
+            	hgvsc, hgvsp, codon_change, aa_change, biotype, impact_so, impact_severity, \
+            	polyphen_pred, sift_pred, max_af, gnomade_af, clinvar_sig, \
+            	clinvar_disease_name, \
+            	existing_variation, \
+            	pubmed \
+            	from variants where impact_severity == 'HIGH' or impact_severity == 'MED' \
+            	or polyphen_pred == 'possibly_damaging' or \
+            	polyphen_pred == 'probably_damaging' or sift_pred == 'deleterious' or \
+            	sift_pred == 'deleterious_low_confidence'" \
+              --header /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.gemini.db > \
+              /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.family.query.txt
+```
+
+#### intervar
+
+```
+python /home/tools/InterVar/Intervar.py --buildver=hg38 \
+        	--input=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
+        	--database_intervar=/home/tools/InterVar/intervardb/ \
+        	--table_annovar=/home/tools/annovar/table_annovar.pl \
+        	--convert2annovar=/home/tools/annovar/convert2annovar.pl \
+        	--annotate_variation=/home/tools/annovar/annotate_variation.pl \
+        	--database_locat=/home/tools/annovar/humandb/ \
+        	--input_type=VCF \
+        	--output=/home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample
+```
+
+### Create Final Report
+
+```
+R CMD BATCH /home/projects/ejprd_istanbul_workshop/scripts/final_report_script.R \
+/home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.hg38_multianno.txt.intervar \
+/home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.query.txt \
+/home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.hg38_multianno.txt \
+/home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.final.annotation.tsv
 ```
