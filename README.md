@@ -9,13 +9,13 @@ This repository contains all required information for performing Whole Exome Seq
 - Mapping with [BWA-MEM](https://github.com/lh3/bwa)
   - If necessary, merge BAMs
 - Processing using [GATK](https://gatk.broadinstitute.org/hc/en-us) best practices
-  - MarkDuplicates
-  - FixMateInformation
-  - BaseRecalibrator
-  - ApplyBQSR
-  - HaplotypeCaller
-    - If multiple samples, CombineGVCFs
-  - GenotypeGVCFs
+  - [MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+  - [FixMateInformation](https://gatk.broadinstitute.org/hc/en-us/articles/360036713471-FixMateInformation-Picard-)
+  - [BaseRecalibrator](https://gatk.broadinstitute.org/hc/en-us/articles/360036898312-BaseRecalibrator)
+  - [ApplyBQSR](https://gatk.broadinstitute.org/hc/en-us/articles/360037055712-ApplyBQSR)
+  - [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+    - If multiple samples, [CombineGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/360037053272-CombineGVCFs)
+  - [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
 - Annotation
   - [vcfanno](https://github.com/brentp/vcfanno)
   - [vep](https://github.com/Ensembl/ensembl-vep)
