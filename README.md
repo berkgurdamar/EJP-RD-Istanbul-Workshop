@@ -1,6 +1,6 @@
 # EJP RD Istanbul Workshop
 
-This repository contains all required informations for performing Whole Exome Sequencing (WES) analysis.
+This repository contains all required information for performing Whole Exome Sequencing (WES) analysis.
 
 ## Steps
 
