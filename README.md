@@ -240,7 +240,7 @@ python /home/tools/InterVar/Intervar.py --buildver=hg38 \
 ### Create Final Report
 
 ```
-R CMD BATCH /home/projects/ejprd_istanbul_workshop/scripts/final_report_script.R \
+Rscript --vanilla /home/projects/ejprd_istanbul_workshop/scripts/final_report_script.R \
 /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.hg38_multianno.txt.intervar \
 /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.query.txt \
 /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.hg38_multianno.txt \
