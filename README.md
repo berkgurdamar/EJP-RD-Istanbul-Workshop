@@ -41,6 +41,7 @@ conda activate EpiRARE_new
 Create necessary folders
 
 ```
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/qc
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/trimming
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/mapping
