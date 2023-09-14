@@ -28,6 +28,11 @@ This repository contains all required information for performing Whole Exome Seq
 
 FASTQ files are located in the `/home/projects/ejprd_istanbul_workshop/FASTQ/`.
 
+Create new tmux session
+```
+tmux new -s {session_name}
+```
+
 Activate the conda environment
 ```
 conda activate EpiRARE_new
@@ -40,6 +45,7 @@ mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/qc
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/trimming
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/mapping
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/processing
+mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling
 mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/annotation
 ```
 
@@ -66,20 +72,20 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 ```
 bwa mem -R "\@RG\\tID:{lane}\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\" \
 -M -t 8 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
-/home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_1.fastq.gz \
-/home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_2.fastq.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001.sam
+/home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_1_val_1.fq.gz \
+/home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_2_val_2.fq.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
 
 sambamba view --nthreads=4 --with-header --show-progress --sam-input --format=bam \
---output-filename=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001_unsorted.bam \
-/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001.sam
+--output-filename=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.unsorted.bam \
+/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
 
-rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001.sam
+rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
 
 sambamba sort --tmpdir /home/tmp/guest --nthreads=4 \
 --out=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.bam \
-/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001_unsorted.bam
+/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.unsorted.bam
 
-rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001_unsorted.bam
+rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.unsorted.bam
 ```
 
 Combine multiple lanes
@@ -107,7 +113,7 @@ CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=/home/tmp/guest
 #### FixMateInformation
 
 ```
-picard FixMateInformation I=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.bam\
+picard FixMateInformation I=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.bam \
 O=/home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample.mdup.matefixed.bam \
 SORT_ORDER=coordinate CREATE_INDEX=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/home/tmp/guest
 ```
@@ -174,8 +180,8 @@ gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.
 vt validate /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz \
 -r /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 
-vcfanno -p 4 -lua /home/projects/ejprd_istanbul_workshop/scripts/analysis_related/custom.lua \
-/home/projects/ejprd_istanbul_workshop/scripts/analysis_related/config.toml \
+vcfanno -p 4 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
+/home/projects/ejprd_istanbul_workshop/scripts/config.toml \
 /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf
 ```
 
@@ -185,7 +191,7 @@ vcfanno -p 4 -lua /home/projects/ejprd_istanbul_workshop/scripts/analysis_relate
 /home/tools/vep/ensembl-vep-release-109/vep -i /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf \
 --offline --cache --dir /home/tools/vep/ --cache_version 109 \
 --assembly GRCh38 --hgvsg --everything --total_length --fork 4 \
---force_overwrite -o /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
+--force_overwrite -o /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vep.vcf \
 --vcf --fasta /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 ```
 
