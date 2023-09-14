@@ -71,7 +71,7 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 ### Mapping
 
 ```
-bwa mem -R "\@RG\\tID:{lane}\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\" \
+bwa mem -R "\@RG\\tID:sample\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\" \
 -M -t 12 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_1_val_1.fq.gz \
 /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_2_val_2.fq.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
