@@ -199,7 +199,7 @@ vcfanno -p 12 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
 #### vcf2db
 
 ```
-vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep.vcf \
+vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vep.vcf \
 /home/projects/ejprd_istanbul_workshop/sample.ped /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.gemini.db
 ```
 
@@ -221,7 +221,7 @@ vcf2db.py /home/projects/ejprd_istanbul_workshop/{user_id}/processing/sample_vep
             	polyphen_pred == 'probably_damaging' or sift_pred == 'deleterious' or \
             	sift_pred == 'deleterious_low_confidence'" \
               --header /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.gemini.db > \
-              /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.family.query.txt
+              /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample.query.txt
 ```
 
 #### InterVar
