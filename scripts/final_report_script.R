@@ -46,4 +46,11 @@ predictions <- predictions[,c(14:117,150)]
 comb_df <- merge(x=comb_df, y=predictions, by="idx", all.x=TRUE)
 comb_df <- comb_df[,-1]
 
+colnames(comb_df)[which(colnames(comb_df) == "gt_types")] <- "zygosity"
+
+comb_df$zygosity[comb_df$zygosity == 0] = "Homozygous for the Reference"
+comb_df$zygosity[comb_df$zygosity == 1] = "Heterozygous"
+comb_df$zygosity[comb_df$zygosity == 2] = "N/A"
+comb_df$zygosity[comb_df$zygosity == 3] = "Homozygous for the Alternative"
+
 data.table::fwrite(comb_df, args[4], sep = "\t")
