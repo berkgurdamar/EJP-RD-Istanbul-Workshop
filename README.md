@@ -55,7 +55,7 @@ mkdir /home/projects/ejprd_istanbul_workshop/{user_id}/annotation
 ```
 fastqc --dir /home/tmp/guest \
 --outdir /home/projects/ejprd_istanbul_workshop/{user_id}/qc \
---threads 12 --quiet --noextract \
+--threads 8 --quiet --noextract \
 /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_1.fastq.gz /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_2.fastq.gz
 ```
 
@@ -64,7 +64,7 @@ fastqc --dir /home/tmp/guest \
 ```
 trim_galore --phred33 --quality 20 --gzip --length 35 \
 --trim-n --output_dir /home/projects/ejprd_istanbul_workshop/{user_id}/trimming \
---retain_unpaired --cores 12 \
+--retain_unpaired --cores 8 \
 --paired /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_1.fastq.gz /home/projects/ejprd_istanbul_workshop/FASTQ/sample_L001_2.fastq.gz
 ```
 
@@ -72,11 +72,11 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 
 ```
 bwa mem -R \@RG\\tID:sample\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\ \
--M -t 12 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
+-M -t 8 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
 /home/projects/ejprd_istanbul_workshop/{user_id}/trimming/sample_L001_1_val_1.fq.gz \
 /home/projects/ejprd_istanbul_workshop/{user_id}/trimming/sample_L001_2_val_2.fq.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
 
-sambamba view --nthreads=12 --with-header --show-progress --sam-input --format=bam \
+sambamba view --nthreads=8 --with-header --show-progress --sam-input --format=bam \
 --output-filename=/home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.unsorted.bam \
 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.sam
 
@@ -92,7 +92,7 @@ rm -f /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.unsorted.b
 Combine multiple lanes
 
 ```
-sambamba merge -t 12 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.bam \
+sambamba merge -t 8 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample.bam \
 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L001.bam \
 /home/projects/ejprd_istanbul_workshop/{user_id}/mapping/sample_L002.bam
 
@@ -181,7 +181,7 @@ gatk GenotypeGVCFs --reference /home/resources/reference/homo_sapiens/hg38/ucsc.
 vt validate /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz \
 -r /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 
-vcfanno -p 12 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
+vcfanno -p 8 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
 /home/projects/ejprd_istanbul_workshop/scripts/config.toml \
 /home/projects/ejprd_istanbul_workshop/{user_id}/variant_calling/sample_genotype.vcf.gz > /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf
 ```
@@ -191,7 +191,7 @@ vcfanno -p 12 -lua /home/projects/ejprd_istanbul_workshop/scripts/custom.lua \
 ```
 /home/tools/vep/ensembl-vep-release-109/vep -i /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vcfanno.vcf \
 --offline --cache --dir /home/tools/vep/ --cache_version 109 \
---assembly GRCh38 --hgvsg --everything --total_length --fork 12 \
+--assembly GRCh38 --hgvsg --everything --total_length --fork 8 \
 --force_overwrite -o /home/projects/ejprd_istanbul_workshop/{user_id}/annotation/sample_vep.vcf \
 --vcf --fasta /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta
 ```
