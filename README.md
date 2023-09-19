@@ -73,7 +73,7 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 #### Index reference genome
 
 ```
-bwa index ref.fa
+bwa index path/to/ref.fa
 ```
 
 #### Mapping to a indexed genome
