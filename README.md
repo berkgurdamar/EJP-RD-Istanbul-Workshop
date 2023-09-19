@@ -70,6 +70,14 @@ trim_galore --phred33 --quality 20 --gzip --length 35 \
 
 ### Mapping
 
+#### Index reference genome
+
+```
+bwa index ref.fa
+```
+
+#### Mapping to a indexed genome
+
 ```
 bwa mem -R \@RG\\tID:sample\\tPL:ILLUMINA\\tLB:Twist_Comprehensive\\tSM:sample\ \
 -M -t 8 /home/resources/reference/homo_sapiens/hg38/ucsc.hg38.fasta \
