@@ -39,4 +39,13 @@ pred_res <- predatoR(info_df =  input_df, n_threads = 8, gene_name_info = TRUE, 
 # Exploratory usage -------------------------------------------------------
 
 # Cα approach with 7.6Å Angstrom
-prediction_result <- predatoR(input_df, distance_cutoff = 7.6, network_approach = "ca") 
+prediction_result <- predatoR(input_df, n_threads = 8, gene_name_info = TRUE, distance_cutoff = 7.6, network_approach = "ca") 
+
+
+# AlphaFold ---------------------------------------------------------------
+
+input_df <- as.data.frame(cbind("AF-Q8NBT3-F1-model_v4", "A", 4, "LEU", "LYS", "TMEM145"))
+
+# ca approach with 7 Angstrom
+prediction_result <- predatoR(input_df, n_threads = 8, gene_name_info = TRUE, distance_cutoff = 7, network_approach = "ca", PDB_path = "D:/Downloads/") 
+
